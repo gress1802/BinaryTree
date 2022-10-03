@@ -1,3 +1,6 @@
+import java.util.Iterator;
+import java.util.Scanner;
+
 public class BinaryTree {
     //Implements a Binary Tree of Strings
     private class Node {
@@ -17,34 +20,45 @@ public class BinaryTree {
 
     public BinaryTree() {
     //create an empty tree
-    
+        root = null;
     }
     
     public BinaryTree(String d) {
     //create a tree with a single node
+    root = new Node(null,d,null,null);
     
     } 
 
     public BinaryTree(BinaryTree b1, String d, BinaryTree b2) { 
     //merge the trees b1 AND b2 with a common root with data d
     // this constructor must make a copy of the contents of b1 and b2
+
     }
 
     public BinaryTree(String t, String open, String close, String empty) {
-    /*create a binary tree from the post order format discussed 
-    in class. Assume t is a syntactically correct string 
-    representation of the tree. Open and close are the strings 
-    which represent the beginning and end markers of a tree.
-    Empty represents an empty tree.
-    The example in class used ( ) and ! for open, close and 
-    empty respectively.
-    The data in the tree will not include strings matching 
-    open, close or empty. 
-    All tokens (data, open, close and empty) will be separated 
-    By white space
-    Most of the work should be done in a private recursive 
-    method 
-    */
+        /*create a binary tree from the post order format discussed 
+        in class. Assume t is a syntactically correct string 
+        representation of the tree. Open and close are the strings 
+        which represent the beginning and end markers of a tree.
+        Empty represents an empty tree.
+        The example in class used ( ) and ! for open, close and 
+        empty respectively.
+        The data in the tree will not include strings matching 
+        open, close or empty. 
+        All tokens (data, open, close and empty) will be separated 
+        By white space
+        Most of the work should be done in a private recursive 
+        method 
+        */
+        Scanner scan = new Scanner(t);
+
+
+        scan.close();
+    }
+
+    private BinaryTree recursiveAdd(Scanner scan, String t){
+        if(t.equals("!")) return new BinaryTree();
+        
     }
 
     public class PostorderIterator implements Iterator<String> {
