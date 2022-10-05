@@ -32,7 +32,20 @@ public class BinaryTree {
     public BinaryTree(BinaryTree b1, String d, BinaryTree b2) { 
     //merge the trees b1 AND b2 with a common root with data d
     // this constructor must make a copy of the contents of b1 and b2
+        Node b1RootCopy = copyRoot(b1.root);
+        Node b2RootCopy = copyRoot(b2.root);
+        this.root = new Node(b1RootCopy, d, b2RootCopy, null);
 
+    }
+
+    private Node copyRoot(Node r){
+        if(r == null){ //makes a copy of an empty tree
+            return null;
+        }
+        Node rootCopy = new Node(r.left,r.data,r.right,null);
+        rootCopy.left = copyRoot(r.left);
+        rootCopy.right = copyRoot(r.right);
+        return rootCopy;
     }
 
     public BinaryTree(String t, String open, String close, String empty) {
@@ -51,15 +64,32 @@ public class BinaryTree {
         method 
         */
         Scanner scan = new Scanner(t);
-
-
+        this.root = recursiveAdd(scan,open,close,empty).root;
         scan.close();
     }
 
-    private BinaryTree recursiveAdd(Scanner scan, String t){
-        if(t.equals("!")) return new BinaryTree();
+    public void binaryPrintThree(){
+        System.out.println("Root: "+root.data+"\nLeft: "+root.left.data+"\nRight: "+root.right.data);
+    }
+
+    private BinaryTree recursiveAdd(Scanner scan, String open, String close, String empty){
+        String d;
+        BinaryTree b1;
+        BinaryTree b2;
+        String t = scan.next();
+        if(t.equals(empty)) return new BinaryTree();
+        b1 = recursiveAdd(scan,open,close,empty);
+        b2 = recursiveAdd(scan,open,close,empty);
+        d = scan.next();
+        while(d.equals(close) | d.equals(empty)){
+            d = scan.next();
+        }
+        return new BinaryTree(b1,d,b2);
+
+
         
     }
+/* 
 
     public class PostorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in an post order pattern
@@ -174,6 +204,7 @@ public class BinaryTree {
         //use (, ) and ! for open, close and empty respectively
         //most of the work should be done in a recursive private method.
     }
+    */
 }
 
 
