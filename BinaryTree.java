@@ -1,6 +1,8 @@
 import java.util.Iterator;
 import java.util.Scanner;
 
+import javax.security.auth.x500.X500Principal;
+
 public class BinaryTree {
     //Implements a Binary Tree of Strings
     private class Node {
@@ -15,6 +17,7 @@ public class BinaryTree {
         data = d;
         right = r;
         parent = p;
+
         }
     }
     private Node root;
@@ -37,7 +40,10 @@ public class BinaryTree {
     // this constructor must make a copy of the contents of b1 and b2
         Node b1RootCopy = copyRoot(b1.root);
         Node b2RootCopy = copyRoot(b2.root);
-        this.root = new Node(b1RootCopy, d, b2RootCopy, null);
+        Node x = new Node(b1RootCopy, d, b2RootCopy, null);
+        this.root = x; //using a variable x so that we can set the parent value of the two trees
+        if(b1RootCopy != null) b1RootCopy.parent = x; //These two lines (41 and 42) both assign the parent pointers for the tree
+        if(b2RootCopy != null) b2RootCopy.parent = x;
 
     }
 
@@ -45,7 +51,7 @@ public class BinaryTree {
         if(r == null){ //makes a copy of an empty tree
             return null;
         }
-        Node rootCopy = new Node(r.left,r.data,r.right,null);
+        Node rootCopy = new Node(r.left,r.data,r.right,r.parent);
         rootCopy.left = copyRoot(r.left);
         rootCopy.right = copyRoot(r.right);
         return rootCopy;
@@ -76,7 +82,7 @@ public class BinaryTree {
     }
 
     public void binaryPrintThree(){ //testing method that prints the root and its two childeren
-        System.out.println("Root:"+root.data+" Right:"+root.right.data+" Left:"+root.left.data);
+        System.out.println("Root:"+root.data+" Right:"+root.right.data+" Left:"+root.left.data+" Right Parent: "+root.right.parent.data+" Left Parent: "+root.left.parent.data);
     }
 
     private BinaryTree recursiveAdd(Scanner scan, String open, String close, String empty){
