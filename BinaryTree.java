@@ -69,22 +69,20 @@ public class BinaryTree {
     }
 
     public void binaryPrintThree(){
-        System.out.println("Root: "+root.data+"\nLeft: "+root.left.data+"\nRight: "+root.right.data);
+        System.out.println("Root: "+root.data);
     }
 
     private BinaryTree recursiveAdd(Scanner scan, String open, String close, String empty){
-        String d;
+        char d;
         BinaryTree b1;
         BinaryTree b2;
         String t = scan.next();
-        if(t.equals(empty)) return new BinaryTree();
         b1 = recursiveAdd(scan,open,close,empty);
         b2 = recursiveAdd(scan,open,close,empty);
-        d = scan.next();
-        while(d.equals(close) | d.equals(empty)){
-            d = scan.next();
-        }
-        return new BinaryTree(b1,d,b2);
+        if(t.equals(empty)) return new BinaryTree();
+        d = scan.next().charAt(0); 
+        String x = String.valueOf(d);
+        return new BinaryTree(b1,x,b2);
 
 
         
