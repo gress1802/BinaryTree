@@ -9,6 +9,7 @@ public class BinaryTree {
         private Node right;
         private Node parent; //reference to the parent node 
         // the parent is null for the root node
+
         private Node(Node L, String d, Node r, Node p) {
         left = L;
         data = d;
@@ -17,7 +18,9 @@ public class BinaryTree {
         }
     }
     private Node root;
-
+    private String open = "(";//These are attributes that are set in the constructors
+    private String close = ")";//They are here so that the toString method can correctly build the string again
+    private String empty = "!";
     public BinaryTree() {
     //create an empty tree
         root = null;
@@ -63,6 +66,10 @@ public class BinaryTree {
         Most of the work should be done in a private recursive 
         method 
         */
+        this.open = open;
+        this.close = close;
+        this.empty = empty;
+        
         Scanner scan = new Scanner(t);
         this.root = recursiveAdd(scan,open,close,empty).root;
         scan.close();
@@ -197,21 +204,21 @@ public class BinaryTree {
         return new LevelorderIterator();
         //return a new level order iterator object 
     }  */
-
-    public String toStringHelper(Node root){ //recursive method that helps produce a string representation of the tree
-        String ret = "";
-        if(this.root == null){ ret = ret + "! "; return ret; }
-        ret = ret + "(";
-        toStringHelper(root.right);
-        toStringHelper(root.left);
-        ret = ret + " " + root.data + " )";
+    public String ret; //Helper attribute for String for returning
+    public String toStringHelper(Node r){ //recursive method that helps produce a string representation of the tree
+        if(r == null){ ret =ret +empty+" "; return ret;}
+        ret = ret +open+" ";
+        toStringHelper(r.left);
+        toStringHelper(r.right);
+        ret = ret+r.data + " "+close+" ";
         return ret;
+        
         
     }
 
-    public String toString() {
-
-        return toStringHelper(this.root);
+    public String toString() {// A toString() method
+        ret = "";
+        return ret = toStringHelper(this.root);
 
         //returns the string representation of the tree using the post order format 
         // discussed in class. If the tree was created from a string, use the 
