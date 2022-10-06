@@ -68,21 +68,24 @@ public class BinaryTree {
         scan.close();
     }
 
-    public void binaryPrintThree(){
-        System.out.println("Root: "+root.data);
+    public void binaryPrintThree(){ //testing method that prints the root and its two childeren
+        System.out.println("Root:"+root.data+" Right:"+root.right.data+" Left:"+root.left.data);
     }
 
     private BinaryTree recursiveAdd(Scanner scan, String open, String close, String empty){
-        char d;
+        String d;
         BinaryTree b1;
         BinaryTree b2;
         String t = scan.next();
+        if(t.equals(empty)) return new BinaryTree();
         b1 = recursiveAdd(scan,open,close,empty);
         b2 = recursiveAdd(scan,open,close,empty);
-        if(t.equals(empty)) return new BinaryTree();
-        d = scan.next().charAt(0); 
-        String x = String.valueOf(d);
-        return new BinaryTree(b1,x,b2);
+        d = scan.next();
+        while(d.equals(open) | d.equals(close) | d.equals(empty)){ //loop that sets d to the next value node in the string
+            d = scan.next();
+        }
+        scan.next(); //closing now )
+        return new BinaryTree(b1,d,b2);
 
 
         
@@ -179,22 +182,36 @@ public class BinaryTree {
     }
 
     public Iterator<String> inorder() {
-
+        return new inorderIterator();
         //return a new in order iterator object 
     } 
     public Iterator<String> postorder() {
-
+        return new PostorderIterator();
         //return a new post order iterator object 
     } 
     public Iterator<String> preorder() {
-
+        return new PreorderIterator();
         //return a new pre order iterator object 
     } 
     public Iterator<String> levelorder() {
-
+        return new LevelorderIterator();
         //return a new level order iterator object 
-    } 
+    }  */
+
+    public String toStringHelper(Node root){ //recursive method that helps produce a string representation of the tree
+        String ret = "";
+        if(this.root == null){ ret = ret + "! "; return ret; }
+        ret = ret + "(";
+        toStringHelper(root.right);
+        toStringHelper(root.left);
+        ret = ret + " " + root.data + " )";
+        return ret;
+        
+    }
+
     public String toString() {
+
+        return toStringHelper(this.root);
 
         //returns the string representation of the tree using the post order format 
         // discussed in class. If the tree was created from a string, use the 
@@ -202,7 +219,7 @@ public class BinaryTree {
         //use (, ) and ! for open, close and empty respectively
         //most of the work should be done in a recursive private method.
     }
-    */
+    
 }
 
 
