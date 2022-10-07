@@ -1,7 +1,6 @@
 import java.util.Iterator;
 import java.util.Scanner;
 
-import javax.security.auth.x500.X500Principal;
 
 public class BinaryTree {
     //Implements a Binary Tree of Strings
@@ -103,30 +102,55 @@ public class BinaryTree {
 
         
     }
-/* 
+ 
 
     public class PostorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in an post order pattern
         //the implementation must use the parent pointer and must not use an 
         //additional data structure
+        Node temp; //Helper attribute to traverse the tree
         
-        
-        public PostorderIterator() {
-        
+        public PostorderIterator(){
+
         }
         
         public boolean hasNext() {
-        
+            if(temp.left != null){
+                return true;
+            }else if(temp.right != null){
+                return true;
+            }else{
+                return false;
+            }
         }
         
         public String next() {
-        
+            temp = root;
+            while(temp.left != null && temp.right != null){
+                if(temp.left != null){
+                    temp = temp.left;
+                }else{
+                    temp = temp.right;
+                }
+            }
+            String ret = temp.data;
+            remove();
+            return ret;
         }
         
-        public void remove() {
-        //optional method not implemented
+        public void remove() {//removes the node that temp is currently equal to
+            Node z = temp; //variable to compare pointers
+            temp = temp.parent;
+            if(temp.left == z){
+                temp.left = null;
+            }else{
+                temp.right = null;
+            }
         }
+
+ 
     }
+
     public class InorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in an in order pattern
         //This implementation must use a stack and must not use the parent pointer 
@@ -148,7 +172,7 @@ public class BinaryTree {
         //optional method not implemented
         }
     }
-
+/* 
     public class PreorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in a pre order pattern
         //This iterator will recursively do the complete iteration saving the
@@ -231,6 +255,12 @@ public class BinaryTree {
         //the values of open, close and empty given to the constructor otherwise 
         //use (, ) and ! for open, close and empty respectively
         //most of the work should be done in a recursive private method.
+    }
+
+    public static void main(String[] args){
+        String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
+        BinaryTree c = new BinaryTree(x,"(",")","!");
+            
     }
     
 }
