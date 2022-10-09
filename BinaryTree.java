@@ -51,8 +51,8 @@ public class BinaryTree {
             return null;
         }
         Node rootCopy = new Node(r.left,r.data,r.right,r.parent);
-        rootCopy.left = copyRoot(r.left);
-        rootCopy.right = copyRoot(r.right);
+        if(rootCopy.left != null) rootCopy.left.parent = rootCopy;
+        if(rootCopy.right != null) rootCopy.right.parent = rootCopy;
         return rootCopy;
     }
 
@@ -74,10 +74,13 @@ public class BinaryTree {
         this.open = open;
         this.close = close;
         this.empty = empty;
-        
-        Scanner scan = new Scanner(t);
-        this.root = recursiveAdd(scan,open,close,empty).root;
-        scan.close();
+        if(t.equals("")){
+            root = null;
+        }else{
+            Scanner scan = new Scanner(t);
+            this.root = recursiveAdd(scan,open,close,empty).root;
+            scan.close();
+        }
     }
 
     public void binaryPrintThree(){ //testing method that prints the root and its two childeren
@@ -108,56 +111,80 @@ public class BinaryTree {
         //An iterator that returns data in the tree in an post order pattern
         //the implementation must use the parent pointer and must not use an 
         //additional data structure
-        Node temp; //Helper attribute to traverse the tree
+        Node temp = root; //Helper attribute to traverse the tree
         
         public PostorderIterator(){
-
         }
+
+        public void findBottom(Node tempRoot){
+            while(tempRoot.left != null | tempRoot.right != null){
+                if(tempRoot.left != null){
+                    tempRoot = tempRoot.left;
+                }else if(tempRoot.right != null){
+                    tempRoot = tempRoot.right;
+                }
+                temp = tempRoot;
+            }
+            temp = tempRoot;
+
+            
+        }
+
+
+        
         
         public boolean hasNext() {
-            if(temp.left != null){
-                return true;
-            }else if(temp.right != null){
-                return true;
-            }else{
-                return false;
-            }
+            return temp.parent != null;
         }
         
-        public String next() {
-            temp = root;
-            while(temp.left != null && temp.right != null){
-                if(temp.left != null){
-                    temp = temp.left;
-                }else{
-                    temp = temp.right;
+        public String next(){
+            if(temp == null){
+                return "Empty Tree!";
+            }else if(temp == root){
+                findBottom(temp);
+                return temp.data;
+            }else{
+                Node tempParent = temp.parent;
+                if(tempParent.right == temp){
+                    temp = tempParent;
+                    tempParent = temp.parent;
+                    return temp.data;
                 }
+                else if(tempParent.left != null && tempParent.left.data == temp.data){
+                    if(tempParent.right == null){
+                        temp = tempParent;
+                        return tempParent.data;
+                    }else{
+                        findBottom(tempParent.right);
+                        return temp.data;
+                    }
+                }else if(tempParent.right != null && tempParent.right.data == temp.data){
+                    if(tempParent.left == null){
+                        temp = tempParent;
+                        return tempParent.data;
+                    }else{
+                        findBottom(tempParent.left);
+                        return temp.data;
+                    }
+                }
+                return temp.data;
             }
-            String ret = temp.data;
-            remove();
-            return ret;
         }
         
         public void remove() {//removes the node that temp is currently equal to
-            Node z = temp; //variable to compare pointers
-            temp = temp.parent;
-            if(temp.left == z){
-                temp.left = null;
-            }else{
-                temp.right = null;
-            }
         }
 
  
     }
-
+/* 
     public class InorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in an in order pattern
         //This implementation must use a stack and must not use the parent pointer 
         //You must use Java’s stack class
+
         
         public InorderIterator() {
-        
+            
         }
         
         public boolean hasNext() {
@@ -172,7 +199,7 @@ public class BinaryTree {
         //optional method not implemented
         }
     }
-/* 
+
     public class PreorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in a pre order pattern
         //This iterator will recursively do the complete iteration saving the
@@ -222,10 +249,12 @@ public class BinaryTree {
         return new inorderIterator();
         //return a new in order iterator object 
     } 
+    */
     public Iterator<String> postorder() {
         return new PostorderIterator();
         //return a new post order iterator object 
     } 
+    /* 
     public Iterator<String> preorder() {
         return new PreorderIterator();
         //return a new pre order iterator object 
@@ -258,9 +287,19 @@ public class BinaryTree {
     }
 
     public static void main(String[] args){
-        String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
+//        String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
+        String x = "";
         BinaryTree c = new BinaryTree(x,"(",")","!");
-            
+        Iterator<String> q = c.postorder();
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
+        System.out.println(q.next());
     }
     
 }
