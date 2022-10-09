@@ -1,5 +1,6 @@
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Stack;
 
 
 public class BinaryTree {
@@ -176,23 +177,41 @@ public class BinaryTree {
 
  
     }
-/* 
+ 
     public class InorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in an in order pattern
         //This implementation must use a stack and must not use the parent pointer 
         //You must use Java’s stack class
+        Stack<Node> data = new Stack<Node>();
+        Node temp;
 
-        
         public InorderIterator() {
-            
+            temp = root;
+            setup();
+        }
+
+        public void setup(){
+            while(temp != null){
+                data.push(temp);
+                temp = temp.left; //adding the left most nodes to the stack (Including the head)
+            }
         }
         
         public boolean hasNext() {
-        
+            return !data.empty();
         }
         
         public String next() {
-        
+            if(!hasNext()) return "Empty Tree!";
+            Node ret = data.pop();
+            if(ret.right != null){
+                Node tempRight = ret.right;
+                while(tempRight != null){
+                    data.push(tempRight);
+                    tempRight = tempRight.left;
+                }
+            }
+            return ret.data;
         }
         
         public void remove() {
@@ -222,6 +241,7 @@ public class BinaryTree {
         //optional method not implemented
         }
     }
+    /* 
 
     public class LevelorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in a level order pattern
@@ -244,21 +264,22 @@ public class BinaryTree {
         //optional method not implemented
         }
     }
-
+*/
     public Iterator<String> inorder() {
-        return new inorderIterator();
+        return new InorderIterator();
         //return a new in order iterator object 
     } 
-    */
+    
     public Iterator<String> postorder() {
         return new PostorderIterator();
         //return a new post order iterator object 
     } 
-    /* 
+     
     public Iterator<String> preorder() {
         return new PreorderIterator();
         //return a new pre order iterator object 
     } 
+    /* 
     public Iterator<String> levelorder() {
         return new LevelorderIterator();
         //return a new level order iterator object 
@@ -287,10 +308,10 @@ public class BinaryTree {
     }
 
     public static void main(String[] args){
-//        String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
         String x = "";
+        //String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
         BinaryTree c = new BinaryTree(x,"(",")","!");
-        Iterator<String> q = c.postorder();
+        Iterator<String> q = c.inorder();
         System.out.println(q.next());
         System.out.println(q.next());
         System.out.println(q.next());
