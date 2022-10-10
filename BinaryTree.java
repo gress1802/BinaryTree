@@ -346,24 +346,6 @@ public class BinaryTree {
         //most of the work should be done in a recursive private method.
     }
 
-    public static void main(String[] args){
-        //String x = "";
-        String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
-        BinaryTree c = new BinaryTree(x,"(",")","!");
-        Iterator<String> q = c.levelorder();
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        System.out.println(q.next());
-        
-    }
-    
 }
 
 
