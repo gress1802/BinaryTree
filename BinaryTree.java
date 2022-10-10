@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -139,37 +140,40 @@ public class BinaryTree {
         }
         
         public String next(){
-            if(temp == null){
-                return "Empty Tree!";
-            }else if(temp == root){
-                findBottom(temp);
-                return temp.data;
-            }else{
-                Node tempParent = temp.parent;
-                if(tempParent.right == temp){
-                    temp = tempParent;
-                    tempParent = temp.parent;
+            while(hasNext()){
+                if(temp == null){
+                    return "Empty Tree!";
+                }else if(temp == root){
+                    findBottom(temp);
+                    return temp.data;
+                }else{
+                    Node tempParent = temp.parent;
+                    if(tempParent.right == temp){
+                        temp = tempParent;
+                        tempParent = temp.parent;
+                        return temp.data;
+                    }
+                    else if(tempParent.left != null && tempParent.left.data == temp.data){
+                        if(tempParent.right == null){
+                            temp = tempParent;
+                            return tempParent.data;
+                        }else{
+                            findBottom(tempParent.right);
+                            return temp.data;
+                        }
+                    }else if(tempParent.right != null && tempParent.right.data == temp.data){
+                        if(tempParent.left == null){
+                            temp = tempParent;
+                            return tempParent.data;
+                        }else{
+                            findBottom(tempParent.left);
+                            return temp.data;
+                        }
+                    }
                     return temp.data;
                 }
-                else if(tempParent.left != null && tempParent.left.data == temp.data){
-                    if(tempParent.right == null){
-                        temp = tempParent;
-                        return tempParent.data;
-                    }else{
-                        findBottom(tempParent.right);
-                        return temp.data;
-                    }
-                }else if(tempParent.right != null && tempParent.right.data == temp.data){
-                    if(tempParent.left == null){
-                        temp = tempParent;
-                        return tempParent.data;
-                    }else{
-                        findBottom(tempParent.left);
-                        return temp.data;
-                    }
-                }
-                return temp.data;
             }
+            return "Empty Tree!";
         }
         
         public void remove() {//removes the node that temp is currently equal to
@@ -224,24 +228,42 @@ public class BinaryTree {
         //This iterator will recursively do the complete iteration saving the
         //values in the order they are visited in a list (you can use ArrayList or 
         //LinkedList
-        
+        LinkedList<Node> data;
+        int x;
+
         public PreorderIterator() {
-        
+            data = new LinkedList<Node>();
+            preOrder(root);
+            x = 0;
+        }
+
+        public void preOrder(Node r){
+            if(r != null){
+                data.add(r);
+                preOrder(r.left);
+                preOrder(r.right);
+            }
         }
         
         public boolean hasNext() {
-        
+            return (x != 1+data.indexOf(data.getLast()));
         }
         
         public String next() {
-        
+            while(hasNext()){
+                if(data.size() == 0) return "Empty Tree!";
+                String ret = data.get(x).data;
+                x++;
+                return ret;
+            }
+            return "Empty Tree!";
         }
         
         public void remove() {
         //optional method not implemented
         }
     }
-    /* 
+    
 
     public class LevelorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in a level order pattern
@@ -264,7 +286,7 @@ public class BinaryTree {
         //optional method not implemented
         }
     }
-*/
+
     public Iterator<String> inorder() {
         return new InorderIterator();
         //return a new in order iterator object 
@@ -279,11 +301,12 @@ public class BinaryTree {
         return new PreorderIterator();
         //return a new pre order iterator object 
     } 
-    /* 
+    
     public Iterator<String> levelorder() {
         return new LevelorderIterator();
         //return a new level order iterator object 
-    }  */
+    }  
+    
     public String ret; //Helper attribute for String for returning
     public String toStringHelper(Node r){ //recursive method that helps produce a string representation of the tree
         if(r == null){ ret =ret +empty+" "; return ret;}
@@ -308,10 +331,10 @@ public class BinaryTree {
     }
 
     public static void main(String[] args){
-        String x = "";
-        //String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
+        //String x = "";
+        String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
         BinaryTree c = new BinaryTree(x,"(",")","!");
-        Iterator<String> q = c.inorder();
+        Iterator<String> q = c.preorder();
         System.out.println(q.next());
         System.out.println(q.next());
         System.out.println(q.next());
@@ -321,6 +344,8 @@ public class BinaryTree {
         System.out.println(q.next());
         System.out.println(q.next());
         System.out.println(q.next());
+        System.out.println(q.next());
+        
     }
     
 }
