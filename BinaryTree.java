@@ -1,5 +1,6 @@
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -114,11 +115,13 @@ public class BinaryTree {
         //the implementation must use the parent pointer and must not use an 
         //additional data structure
         Node temp = root; //Helper attribute to traverse the tree
+        boolean notFirst = false; //This attribute is used in order to not check the tree's parent pointer for null on the first call of next()
         
         public PostorderIterator(){
         }
 
         public void findBottom(Node tempRoot){
+            notFirst = true;
             while(tempRoot.left != null | tempRoot.right != null){
                 if(tempRoot.left != null){
                     tempRoot = tempRoot.left;
@@ -136,44 +139,46 @@ public class BinaryTree {
         
         
         public boolean hasNext() {
-            return temp.parent != null;
+            return !(temp.parent == null);
         }
         
         public String next(){
-            while(hasNext()){
-                if(temp == null){
+            if(notFirst){
+                if(!hasNext()){
                     return "Empty Tree!";
-                }else if(temp == root){
-                    findBottom(temp);
-                    return temp.data;
-                }else{
-                    Node tempParent = temp.parent;
-                    if(tempParent.right == temp){
-                        temp = tempParent;
-                        tempParent = temp.parent;
-                        return temp.data;
-                    }
-                    else if(tempParent.left != null && tempParent.left.data == temp.data){
-                        if(tempParent.right == null){
-                            temp = tempParent;
-                            return tempParent.data;
-                        }else{
-                            findBottom(tempParent.right);
-                            return temp.data;
-                        }
-                    }else if(tempParent.right != null && tempParent.right.data == temp.data){
-                        if(tempParent.left == null){
-                            temp = tempParent;
-                            return tempParent.data;
-                        }else{
-                            findBottom(tempParent.left);
-                            return temp.data;
-                        }
-                    }
-                    return temp.data;
                 }
             }
-            return "Empty Tree!";
+            if(temp == null){
+                return "Empty Tree!";
+            }else if(temp == root){
+                findBottom(temp);
+                return temp.data;
+            }else{
+                Node tempParent = temp.parent;
+                if(tempParent.right == temp){
+                    temp = tempParent;
+                    tempParent = temp.parent;
+                    return temp.data;
+                }
+                else if(tempParent.left != null && tempParent.left.data == temp.data){
+                    if(tempParent.right == null){
+                        temp = tempParent;
+                        return tempParent.data;
+                    }else{
+                        findBottom(tempParent.right);
+                        return temp.data;
+                    }
+                }else if(tempParent.right != null && tempParent.right.data == temp.data){
+                    if(tempParent.left == null){
+                        temp = tempParent;
+                        return tempParent.data;
+                    }else{
+                        findBottom(tempParent.left);
+                        return temp.data;
+                    }
+                }
+                return temp.data;
+            }
         }
         
         public void remove() {//removes the node that temp is currently equal to
@@ -186,10 +191,11 @@ public class BinaryTree {
         //An iterator that returns data in the tree in an in order pattern
         //This implementation must use a stack and must not use the parent pointer 
         //You must use Java’s stack class
-        Stack<Node> data = new Stack<Node>();
+        Stack<Node> data;
         Node temp;
 
         public InorderIterator() {
+            data = new Stack<Node>();
             temp = root;
             setup();
         }
@@ -264,21 +270,31 @@ public class BinaryTree {
         }
     }
     
-
     public class LevelorderIterator implements Iterator<String> {
         //An iterator that returns data in the tree in a level order pattern
         //This implementation uses a FIFOQueue
-        
+       
+        Queue<Node> data;
+
         public LevelorderIterator() {
+            data = new LinkedList<Node>();
+            data.add(root);
         
         }
         
         public boolean hasNext() {
-        
+            return !data.isEmpty();
         }
         
         public String next() {
-        
+            if(!hasNext()){
+                return "Empty Tree!";
+            }
+
+            Node currentNode = data.poll();
+            if(currentNode.left != null) data.add(currentNode.left);
+            if(currentNode.right != null) data.add(currentNode.right);
+            return currentNode.data;
         }
         
         public void remove() {
@@ -301,7 +317,7 @@ public class BinaryTree {
         return new PreorderIterator();
         //return a new pre order iterator object 
     } 
-    
+     
     public Iterator<String> levelorder() {
         return new LevelorderIterator();
         //return a new level order iterator object 
@@ -334,7 +350,7 @@ public class BinaryTree {
         //String x = "";
         String x = "( ( ( ! ! D ) ( ( ! ! F ) ( ! ! G ) E ) B ) ( ! ( ( ! ! I ) ! H ) C ) X )";
         BinaryTree c = new BinaryTree(x,"(",")","!");
-        Iterator<String> q = c.preorder();
+        Iterator<String> q = c.levelorder();
         System.out.println(q.next());
         System.out.println(q.next());
         System.out.println(q.next());
